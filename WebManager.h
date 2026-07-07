@@ -2,10 +2,9 @@
 #define WEB_MANAGER_H
 
 #include <Arduino.h>
-#include <WiFi.h>
+#include <WebServer.h>
+#include <WebSocketsServer.h>
 #include <LittleFS.h>
-
-#include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 
 class WebManager
@@ -21,12 +20,13 @@ public:
     void broadcastData(
         uint16_t rpm,
         int8_t intakeTemp,
-        float throttle);
+        float throttle
+    );
 
 private:
 
-    AsyncWebServer server;
-    AsyncWebSocket websocket;
+    WebServer server;
+    WebSocketsServer websocket;
 
     void startWiFi();
 
@@ -34,15 +34,16 @@ private:
 
     void setupRoutes();
 
-    void setupWebSocket();
-
     void handleWebSocketEvent(
-        AsyncWebSocket *server,
-        AsyncWebSocketClient *client,
-        AwsEventType type,
-        void *arg,
-        uint8_t *data,
-        size_t len);
+        uint8_t client,
+        WStype_t type,
+        uint8_t * payload,
+        size_t length
+    );
+
+    String getContentType(String filename);
+
+    bool handleFileRead(String path);
 };
 
 #endif
