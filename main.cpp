@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "Config.h"
 #include "WebManager.h"
 
 WebManager web;
@@ -9,16 +10,26 @@ void setup()
     Serial.begin(115200);
 
     Serial.println();
-    Serial.println("================================");
-    Serial.println(" ESP32 OBD Dashboard");
-    Serial.println("================================");
+    Serial.println("==================================");
+    Serial.println(PROJECT_NAME);
+    Serial.println(PROJECT_VERSION);
+    Serial.println("==================================");
 
-    web.begin();
+    if (!web.begin())
+    {
+        Serial.println("WebManager start failed!");
 
-    Serial.println("System started.");
+        while (true)
+        {
+            delay(1000);
+        }
+    }
+
+    Serial.println("System ready.");
 }
 
 void loop()
 {
-    web.loop();
+    // Пока пусто.
+    // AsyncWebServer не требует обработки в loop().
 }
